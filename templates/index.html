@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Flipkart Product Scraper</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/flowbite@2.3.0/dist/flowbite.min.js"></script>
+</head>
+<body class="bg-gradient-to-br from-gray-50 to-gray-200 min-h-screen flex flex-col items-center py-10">
+
+  <!-- Wrapper -->
+  <div class="w-full max-w-4xl bg-white rounded-2xl shadow-2xl p-8">
+    <!-- Header -->
+    <h1 class="text-4xl font-extrabold text-center text-indigo-700 mb-8 tracking-tight">
+      Flipkart Product Scraper 🚀
+    </h1>
+
+    <!-- Search Form -->
+    <form action="/scrape-ui" method="post" class="flex flex-col sm:flex-row gap-4 mb-8">
+      <input type="text" name="url" placeholder="Enter Flipkart product URL"
+        value="{{ url or '' }}"
+        class="flex-1 px-5 py-3 border rounded-xl shadow-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none text-lg"
+        required>
+      <button type="submit"
+        class="px-8 py-3 bg-indigo-600 text-white font-semibold rounded-xl hover:bg-indigo-700 transition text-lg shadow">
+        Scrape
+      </button>
+    </form>
+
+    <!-- Error Alert -->
+    {% if error %}
+      <div class="p-4 mb-6 text-red-700 bg-red-100 rounded-lg border border-red-300" role="alert">
+        <strong>Error:</strong> {{ error }}
+      </div>
+    {% endif %}
+
+    <!-- Results Section -->
+    {% if data %}
+      <div class="space-y-6 animate-fadeIn">
+
+        <!-- Product Name & Brand -->
+        <div class="text-center">
+          <h2 class="text-2xl font-bold text-gray-800">{{ data.product_name }}</h2>
+          <p class="text-gray-500 mt-1">by <span class="font-medium text-indigo-600">{{ data.brand }}</span></p>
+        </div>
+
+        <!-- Main Image -->
+        <div class="flex justify-center">
+          <img src="{{ data.main_image_url }}" alt="Product Image"
+               class="rounded-xl shadow-md max-h-80 object-contain hover:scale-105 transform transition">
+        </div>
+
+        <!-- Pricing Section -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div class="p-5 bg-green-50 rounded-xl shadow text-center">
+            <p class="text-sm text-gray-500">Current Price</p>
+            <p class="text-2xl font-bold text-green-700">₹{{ data.price }}</p>
+          </div>
+          <div class="p-5 bg-red-50 rounded-xl shadow text-center">
+            <p class="text-sm text-gray-500">MRP</p>
+            <p class="text-2xl font-bold text-red-600 line-through">₹{{ data.mrp }}</p>
+          </div>
+        </div>
+
+        <!-- Ratings & Reviews -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-6">
+          <div class="p-5 bg-blue-50 rounded-xl shadow text-center">
+            <p class="text-sm text-gray-500">Average Rating</p>
+            <p class="text-xl font-semibold text-blue-700">{{ data.average_rating }} ⭐</p>
+          </div>
+          <div class="p-5 bg-purple-50 rounded-xl shadow text-center">
+            <p class="text-sm text-gray-500">Total Ratings</p>
+            <p class="text-xl font-semibold text-purple-700">{{ data.rating_count }}</p>
+          </div>
+          <div class="p-5 bg-yellow-50 rounded-xl shadow text-center">
+            <p class="text-sm text-gray-500">Delivery By</p>
+            <p class="text-lg font-semibold text-yellow-700">{{ data.delivery_by }}</p>
+          </div>
+        </div>
+
+        <!-- Seller Info -->
+        <div class="p-5 bg-gray-50 rounded-xl shadow text-center">
+          <p class="text-sm text-gray-500">Seller</p>
+          <p class="text-lg font-semibold text-gray-800">{{ data.seller_name }}</p>
+          <p class="text-sm text-gray-600 mt-1">Return Policy: {{ data.return_policy }}</p>
+        </div>
+
+        <!-- Additional Images -->
+        {% if data.all_images %}
+          <div class="mt-6">
+            <h3 class="text-lg font-bold mb-2 text-gray-700">More Images</h3>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              {% for img in data.all_images %}
+                <img src="{{ img }}" alt="Extra Image"
+                     class="rounded-lg shadow-sm hover:scale-105 transform transition">
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Swagger Link -->
+  <div class="mt-8">
+    <a href="/docs" target="_blank"
+       class="px-6 py-3 bg-gray-900 text-white rounded-xl shadow hover:bg-black transition text-lg">
+      Open Swagger UI
+    </a>
+  </div>
+
+  <!-- Small animation -->
+  <style>
+    .animate-fadeIn {
+      animation: fadeIn 0.6s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+
+</body>
+</html>
